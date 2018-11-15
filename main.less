@@ -1,7 +1,7 @@
 @import "variables";
 
 body {
-  background: lighten(@background, 10%) !important;
+  background: lighten(@background, 5%) !important;
 }
 #header-image {
   min-height: 450px !important;
@@ -61,7 +61,16 @@ body {
   }
 }
 
+#primary, #secondary {
+  background: desaturate(rgba(228, 196, 230, 0.9), 5%) !important;
+}
+
 #colophon {
-  background: @background;
-  color: @content;
+  background: @background !important;
+  color: @content !important;
+}
+
+#secondary .widget-title, #footer-sidebar .widget-title {
+  background: @background !important;
+  color: @content !important;
 }
