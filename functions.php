@@ -7,6 +7,35 @@ add_action( 'wp_enqueue_scripts', 'lavender_enqueue_styles' );
 
 function lavender_customize_register($wp_customize) {
     $wp_customize->remove_control('sixteen_center_logo');
+
+    $wp_customize->add_section('sixteen_blog_layouts_sec', array(
+        'title' => __('Blog Layouts', 'sixteen'),
+        'priority' => 10,
+        'panel' => 'sixteen_designs_panel',
+    ));
+
+    $wp_customize->add_setting('sixteen_blog_layouts', array(
+        'default' => 'sixteen',
+        'sanitize' => 'sixteen_sanitize_blog_layout',
+    ));
+
+    function sixteen_sanitize_blog_layout( $input ) {
+        if ( array_key_exists($input, 'sixteen', 'grid') )
+            return $input;
+        else
+            return '';
+    }
+
+    $wp_customize->add_control('sixteen_blog_layouts', array(
+        'settings' => 'sixteen_blog_layouts',
+        'section' => 'sixteen_blog_layouts_sec',
+        'label' => __('Select Blog Layout', 'sixteen'),
+        'type' => 'select',
+        'choices' =>  array(
+            'sixteen' => __('Sixteen', 'sixteen'),
+            'grid' => __('Basic', 'sixteen'),
+        )
+    ));
 }
 add_action('customize_register', 'lavender_customize_register', 15 );
 
@@ -38,3 +67,16 @@ function lavender_custom_header_setup() {
     );
 }
 add_action( 'after_setup_theme', 'lavender_custom_header_setup', 10 );
+
+/*
+** Function to Get Theme Layout 
+*/
+function sixteen_get_blog_layout(){
+    $ldir = 'layouts/content';
+    if (get_theme_mod('sixteen_blog_layouts') ) :
+        get_template_part( $ldir , get_theme_mod('sixteen_blog_layouts') );
+    else :
+        get_template_part( $ldir ,'grid');
+    endif;
+}
+add_action('sixteen_blog_layout', 'sixteen_get_blog_layout', 11);
